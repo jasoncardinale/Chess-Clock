@@ -4,14 +4,17 @@
 
 ## Schematics
 
-### BOM
+## Bill of Materials (BOM)
 - CAD files are available in [Onshape](https://cad.onshape.com/documents/ef026658cd19dbbd06ef2f29/w/d300655bc5e5fb3e3e495900/e/ef8b9bfafebdc6279e713ce3?renderMode=0&uiState=6a94ef4f233901fb86f0c1bc)
 
 ## Assembly Instructions
 
+Reference the BOM and the exploded assembly shown below
+
 ![Assembly](images/assembly_exploded.png)
 
 ## How to Use
+
 **Before**
 1. Power on Arduino via USB cable
 2. Long press (0.5s) to cycle time control for both players (display will alternate between time constraint and increment)

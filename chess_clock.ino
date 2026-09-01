@@ -61,7 +61,7 @@ unsigned long p2_press_start = 0;
 int turn = 0;
 int limit_index = 0;
 
-// Track last value sent to each display so we only refresh when it changes.
+// Track last value sent to each display so we only refresh when it changes
 // -1 forces an update on the first call.
 int last_value_1 = -1;
 int last_value_2 = -1;
@@ -120,7 +120,7 @@ void loop() {
   player_1.loop();
   player_2.loop();
 
-  // Record when each button was pressed.
+  // Record when each button was pressed
   if (player_1.isPressed()) {
     p1_press_start = millis();
   }
@@ -128,19 +128,19 @@ void loop() {
     p2_press_start = millis();
   }
 
-  // Act on release, using the stored start time to decide short vs long.
+  // Act on release, using the stored start time to decide short vs long
   if (player_1.isReleased()) {
     unsigned long held = millis() - p1_press_start;
     if ((turn == 0 || turn == 3) && held >= LONG_PRESS_MS) {
-      // Long press while idle or game over: cycle time control.
+      // Long press while idle or game over: cycle time control
       limit_index = (limit_index + 1) % TIME_CONTROLS_COUNT;
       resetClock();
     } else if (turn == 0) {
-      // Short press while idle: start game, P2's turn first.
+      // Short press while idle: start game, P2's turn first
       turn_start_time = millis();
       turn = 2;
     } else if (turn == 3) {
-      // Short press while game over: reset to idle with same time control.
+      // Short press while game over: reset to idle with same time control
       resetClock();
     } else if (turn == 1) {
       // End P1's turn.
@@ -182,10 +182,10 @@ void loop() {
     }
   }
 
-  // Update displays.
+  // Update displays
   if (turn == 0) {
-    // Idle: flash between base time and increment.
-    // If increment is 0, just show the base time on both displays.
+    // Idle: flash between base time and increment
+    // If increment is 0, just show the base time on both displays
     unsigned long inc = time_controls[limit_index].increment_ms;
     unsigned long base = time_controls[limit_index].base_ms;
 
@@ -199,10 +199,10 @@ void loop() {
       displayTime(display_2, shown, last_value_2);
     }
   } else if (turn == 3) {
-    // Game over: leave displays showing whatever they last showed.
-    // The flagged player's display will read 0:00 / 00.00.
+    // Game over: leave displays showing whatever they last showed
+    // The flagged player's display will read 0:00 / 00.00
   } else {
-    // Active turn.
+    // Active turn
     unsigned long elapsed = millis() - turn_start_time;
 
     long time_1 = (long)player_1_remaining;

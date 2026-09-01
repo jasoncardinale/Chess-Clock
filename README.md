@@ -2,7 +2,7 @@
 
 ![Assembly](images/assembly.png)
 
-## Schematics
+## Schematic
 
 ## Bill of Materials (BOM)
 

@@ -119,7 +119,6 @@ void setup() {
   pinMode(SWITCH_2_PIN, INPUT_PULLUP);
 
   pinMode(LED_PIN, OUTPUT);
-
   digitalWrite(LED_PIN, HIGH);
 
   display_1.clear();

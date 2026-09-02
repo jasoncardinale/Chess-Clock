@@ -61,12 +61,16 @@ unsigned long player_2_press_start = 0;
 //   2 = player 2's turn
 //   3 = game over (someone flagged)
 int turn = 0;
-int time_control_index = 0;
+int player_1_time_control_index = 0;
+int player_2_time_control_index = 0;
 
 // Track last value sent to each display so we only refresh when it changes
 // -1 forces an update on the first call
 int last_value_1 = -1;
 int last_value_2 = -1;
+
+unsigned long game_over_start = 0;
+bool game_over_flashing = false;
 
 void displayTime(TM1637Display &display, long time_in_ms, int &last_value) {
   if (time_in_ms < 0) {
@@ -96,20 +100,15 @@ void displayTime(TM1637Display &display, long time_in_ms, int &last_value) {
 
 void resetClock() {
   turn_start_time = 0;
-  player_1_remaining = time_controls[time_control_index].base_ms;
-  player_2_remaining = time_controls[time_control_index].base_ms;
+  player_1_remaining = time_controls[player_1_time_control_index].base_ms;
+  player_2_remaining = time_controls[player_2_time_control_index].base_ms;
   turn = 0;
 }
 
 void gameOver() {
   turn = 3;
-
-  for (int i = 0; i < 10; i++) {
-    digitalWrite(LED_PIN, LOW);
-    delay(250);
-    digitalWrite(LED_PIN, HIGH);
-    delay(250);
-  }
+  game_over_start = millis();
+  game_over_flashing = true;
 }
 
 void setup() {
@@ -130,8 +129,8 @@ void setup() {
   button_1.setDebounceTime(50);
   button_2.setDebounceTime(50);
 
-  player_1_remaining = time_controls[time_control_index].base_ms;
-  player_2_remaining = time_controls[time_control_index].base_ms;
+  player_1_remaining = time_controls[player_1_time_control_index].base_ms;
+  player_2_remaining = time_controls[player_2_time_control_index].base_ms;
 }
 
 void loop() {
@@ -151,7 +150,7 @@ void loop() {
     unsigned long held = millis() - player_1_press_start;
     if ((turn == 0 || turn == 3) && held >= LONG_PRESS_MS) {
       // Long press while idle or game over: cycle time control
-      time_control_index = (time_control_index + 1) % TIME_CONTROLS_COUNT;
+      player_1_time_control_index = (player_1_time_control_index + 1) % TIME_CONTROLS_COUNT;
       resetClock();
     } else if (turn == 0) {
       // Short press while idle: start game, P2's turn first
@@ -168,7 +167,8 @@ void loop() {
         player_1_remaining = 0;
         gameOver();
       } else {
-        player_1_remaining += time_controls[time_control_index].increment_ms - elapsed;
+        player_1_remaining -= elapsed;
+        player_1_remaining += time_controls[player_1_time_control_index].increment_ms;
         turn_start_time = millis();
         turn = 2;
       }
@@ -178,7 +178,7 @@ void loop() {
   if (button_2.isReleased()) {
     unsigned long held = millis() - player_2_press_start;
     if ((turn == 0 || turn == 3) && held >= LONG_PRESS_MS) {
-      time_control_index = (time_control_index + 1) % TIME_CONTROLS_COUNT;
+      player_2_time_control_index = (player_2_time_control_index + 1) % TIME_CONTROLS_COUNT;
       resetClock();
     } else if (turn == 0) {
       turn_start_time = millis();
@@ -191,7 +191,8 @@ void loop() {
         player_2_remaining = 0;
         gameOver();
       } else {
-        player_2_remaining += time_controls[time_control_index].increment_ms - elapsed;
+        player_2_remaining -= elapsed;
+        player_2_remaining += time_controls[player_2_time_control_index].increment_ms;
         turn_start_time = millis();
         turn = 1;
       }
@@ -202,16 +203,24 @@ void loop() {
   if (turn == 0) {
     // Idle: flash between base time and increment
     // If increment is 0, just show the base time on both displays
-    unsigned long inc = time_controls[time_control_index].increment_ms;
-    unsigned long base = time_controls[time_control_index].base_ms;
+    unsigned long inc_1 = time_controls[player_1_time_control_index].increment_ms;
+    unsigned long base_1 = time_controls[player_1_time_control_index].base_ms;
+    unsigned long inc_2 = time_controls[player_2_time_control_index].increment_ms;
+    unsigned long base_2 = time_controls[player_2_time_control_index].base_ms;
 
-    if (inc == 0) {
-      displayTime(display_1, base, last_value_1);
-      displayTime(display_2, base, last_value_2);
+    if (inc_1 == 0) {
+      displayTime(display_1, base_1, last_value_1);
     } else {
       bool show_base = ((millis() / IDLE_FLASH_MS) % 2) == 0;
-      unsigned long shown = show_base ? base : inc;
+      unsigned long shown = show_base ? base_1 : inc_1;
       displayTime(display_1, shown, last_value_1);
+    }
+
+    if (inc_2 == 0) {
+      displayTime(display_2, base_2, last_value_2);
+    } else {
+      bool show_base = ((millis() / IDLE_FLASH_MS) % 2) == 0;
+      unsigned long shown = show_base ? base_2 : inc_2;
       displayTime(display_2, shown, last_value_2);
     }
   } else if (turn == 3) {
@@ -242,5 +251,17 @@ void loop() {
 
     displayTime(display_1, time_1, last_value_1);
     displayTime(display_2, time_2, last_value_2);
+  }
+
+  if (game_over_flashing) {
+    unsigned long elapsed = millis() - game_over_start;
+
+    if (elapsed >= 5000) {
+      digitalWrite(LED_PIN, HIGH);
+      game_over_flashing = false;
+    } else {
+      bool led_on = ((elapsed / 250) % 2) == 1;
+      digitalWrite(LED_PIN, led_on ? HIGH : LOW);
+    }
   }
 }

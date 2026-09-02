@@ -15,8 +15,8 @@ TM1637Display display_1(DISPLAY_1_CLK, DISPLAY_1_DIO);
 TM1637Display display_2(DISPLAY_2_CLK, DISPLAY_2_DIO);
 
 // Limit switches
-ezButton player_1(SWITCH_1_PIN);
-ezButton player_2(SWITCH_2_PIN);
+ezButton button_1(SWITCH_1_PIN);
+ezButton button_2(SWITCH_2_PIN);
 
 const unsigned long HOUR = 3600000UL;
 const unsigned long MINUTE = 60000UL;
@@ -62,7 +62,7 @@ int turn = 0;
 int time_control_index = 0;
 
 // Track last value sent to each display so we only refresh when it changes
-// -1 forces an update on the first call.
+// -1 forces an update on the first call
 int last_value_1 = -1;
 int last_value_2 = -1;
 
@@ -75,7 +75,7 @@ void displayTime(TM1637Display &display, long time_in_ms, int &last_value) {
   uint8_t colon = 0b01000000;
 
   if ((unsigned long)time_in_ms < MINUTE) {
-    // Under a minute: show SS.HH (seconds and hundredths)
+    // Under a minute: show SS:HH (seconds and hundredths)
     int seconds = time_in_ms / 1000;
     int hundredths = (time_in_ms % 1000) / 10;
     value = seconds * 100 + hundredths;
@@ -99,6 +99,10 @@ void resetClock() {
   turn = 0;
 }
 
+void gameOver() {
+  turn = 3;
+}
+
 void setup() {
   Serial.begin(9600);
 
@@ -107,29 +111,31 @@ void setup() {
 
   display_1.clear();
   display_2.clear();
+
   display_1.setBrightness(1);
   display_2.setBrightness(1);
-  player_1.setDebounceTime(50);
-  player_2.setDebounceTime(50);
+
+  button_1.setDebounceTime(50);
+  button_2.setDebounceTime(50);
 
   player_1_remaining = time_controls[time_control_index].base_ms;
   player_2_remaining = time_controls[time_control_index].base_ms;
 }
 
 void loop() {
-  player_1.loop();
-  player_2.loop();
+  button_1.loop();
+  button_2.loop();
 
   // Record when each button was pressed
-  if (player_1.isPressed()) {
+  if (button_1.isPressed()) {
     player_1_press_start = millis();
   }
-  if (player_2.isPressed()) {
+  if (button_2.isPressed()) {
     player_2_press_start = millis();
   }
 
   // Act on release, using the stored start time to decide short vs long
-  if (player_1.isReleased()) {
+  if (button_1.isReleased()) {
     unsigned long held = millis() - player_1_press_start;
     if ((turn == 0 || turn == 3) && held >= LONG_PRESS_MS) {
       // Long press while idle or game over: cycle time control
@@ -148,17 +154,16 @@ void loop() {
       if (elapsed >= player_1_remaining) {
         // P1 flagged on the press itself
         player_1_remaining = 0;
-        turn = 3;
+        gameOver();
       } else {
-        player_1_remaining -= elapsed;
-        player_1_remaining += time_controls[time_control_index].increment_ms;
+        player_1_remaining = player_1_remaining - elapsed + time_controls[time_control_index].increment_ms;
         turn_start_time = millis();
         turn = 2;
       }
     }
   }
 
-  if (player_2.isReleased()) {
+  if (button_2.isReleased()) {
     unsigned long held = millis() - player_2_press_start;
     if ((turn == 0 || turn == 3) && held >= LONG_PRESS_MS) {
       time_control_index = (time_control_index + 1) % TIME_CONTROLS_COUNT;
@@ -172,10 +177,9 @@ void loop() {
       unsigned long elapsed = millis() - turn_start_time;
       if (elapsed >= player_2_remaining) {
         player_2_remaining = 0;
-        turn = 3;
+        gameOver();
       } else {
-        player_2_remaining -= elapsed;
-        player_2_remaining += time_controls[time_control_index].increment_ms;
+        player_2_remaining = player_2_remaining - elapsed + time_controls[time_control_index].increment_ms;
         turn_start_time = millis();
         turn = 1;
       }

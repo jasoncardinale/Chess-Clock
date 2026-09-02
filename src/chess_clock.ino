@@ -122,9 +122,9 @@ void setup() {
   digitalWrite(LED_PIN, HIGH);
 
   display_1.clear();
-  display_2.clear();
-
   display_1.setBrightness(1);
+
+  display_2.clear();
   display_2.setBrightness(1);
 
   button_1.setDebounceTime(50);

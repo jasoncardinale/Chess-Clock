@@ -10,6 +10,8 @@
 #define SWITCH_1_PIN 6
 #define SWITCH_2_PIN 7
 
+#define LED_PIN 8
+
 // 4-digit LED TM1637 displays
 TM1637Display display_1(DISPLAY_1_CLK, DISPLAY_1_DIO);
 TM1637Display display_2(DISPLAY_2_CLK, DISPLAY_2_DIO);
@@ -101,6 +103,13 @@ void resetClock() {
 
 void gameOver() {
   turn = 3;
+
+  for (int i = 0; i < 10; i++) {
+    digitalWrite(LED_PIN, HIGH);
+    delay(250);
+    digitalWrite(LED_PIN, LOW);
+    delay(250);
+  }
 }
 
 void setup() {
@@ -108,6 +117,8 @@ void setup() {
 
   pinMode(SWITCH_1_PIN, INPUT_PULLUP);
   pinMode(SWITCH_2_PIN, INPUT_PULLUP);
+
+  pinMode(LED_PIN, OUTPUT);
 
   display_1.clear();
   display_2.clear();

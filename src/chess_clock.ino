@@ -165,6 +165,7 @@ void loop() {
       if (elapsed >= player_1_remaining) {
         // P1 flagged on the press itself
         player_1_remaining = 0;
+        displayTime(display_1, 0, last_value_1);
         gameOver();
       } else {
         player_1_remaining -= elapsed;
@@ -189,6 +190,7 @@ void loop() {
       unsigned long elapsed = millis() - turn_start_time;
       if (elapsed >= player_2_remaining) {
         player_2_remaining = 0;
+        displayTime(display_2, 0, last_value_2);
         gameOver();
       } else {
         player_2_remaining -= elapsed;
@@ -238,6 +240,7 @@ void loop() {
       if (time_1 <= 0) {
         time_1 = 0;
         player_1_remaining = 0;
+        displayTime(display_1, 0, last_value_1);
         gameOver();
       }
     } else if (turn == 2) {
@@ -245,6 +248,7 @@ void loop() {
       if (time_2 <= 0) {
         time_2 = 0;
         player_2_remaining = 0;
+        displayTime(display_2, 0, last_value_2);
         gameOver();
       }
     }

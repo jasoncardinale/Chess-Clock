@@ -105,9 +105,9 @@ void gameOver() {
   turn = 3;
 
   for (int i = 0; i < 10; i++) {
-    digitalWrite(LED_PIN, HIGH);
-    delay(250);
     digitalWrite(LED_PIN, LOW);
+    delay(250);
+    digitalWrite(LED_PIN, HIGH);
     delay(250);
   }
 }
@@ -119,6 +119,8 @@ void setup() {
   pinMode(SWITCH_2_PIN, INPUT_PULLUP);
 
   pinMode(LED_PIN, OUTPUT);
+
+  digitalWrite(LED_PIN, HIGH);
 
   display_1.clear();
   display_2.clear();

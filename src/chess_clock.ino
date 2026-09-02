@@ -59,7 +59,7 @@ unsigned long player_2_press_start = 0;
 //   2 = player 2's turn
 //   3 = game over (someone flagged)
 int turn = 0;
-int limit_index = 0;
+int time_control_index = 0;
 
 // Track last value sent to each display so we only refresh when it changes
 // -1 forces an update on the first call.
@@ -94,8 +94,8 @@ void displayTime(TM1637Display &display, long time_in_ms, int &last_value) {
 
 void resetClock() {
   turn_start_time = 0;
-  player_1_remaining = time_controls[limit_index].base_ms;
-  player_2_remaining = time_controls[limit_index].base_ms;
+  player_1_remaining = time_controls[time_control_index].base_ms;
+  player_2_remaining = time_controls[time_control_index].base_ms;
   turn = 0;
 }
 
@@ -112,8 +112,8 @@ void setup() {
   player_1.setDebounceTime(50);
   player_2.setDebounceTime(50);
 
-  player_1_remaining = time_controls[limit_index].base_ms;
-  player_2_remaining = time_controls[limit_index].base_ms;
+  player_1_remaining = time_controls[time_control_index].base_ms;
+  player_2_remaining = time_controls[time_control_index].base_ms;
 }
 
 void loop() {
@@ -133,7 +133,7 @@ void loop() {
     unsigned long held = millis() - player_1_press_start;
     if ((turn == 0 || turn == 3) && held >= LONG_PRESS_MS) {
       // Long press while idle or game over: cycle time control
-      limit_index = (limit_index + 1) % TIME_CONTROLS_COUNT;
+      time_control_index = (time_control_index + 1) % TIME_CONTROLS_COUNT;
       resetClock();
     } else if (turn == 0) {
       // Short press while idle: start game, P2's turn first
@@ -151,7 +151,7 @@ void loop() {
         turn = 3;
       } else {
         player_1_remaining -= elapsed;
-        player_1_remaining += time_controls[limit_index].increment_ms;
+        player_1_remaining += time_controls[time_control_index].increment_ms;
         turn_start_time = millis();
         turn = 2;
       }
@@ -161,7 +161,7 @@ void loop() {
   if (player_2.isReleased()) {
     unsigned long held = millis() - player_2_press_start;
     if ((turn == 0 || turn == 3) && held >= LONG_PRESS_MS) {
-      limit_index = (limit_index + 1) % TIME_CONTROLS_COUNT;
+      time_control_index = (time_control_index + 1) % TIME_CONTROLS_COUNT;
       resetClock();
     } else if (turn == 0) {
       turn_start_time = millis();
@@ -175,7 +175,7 @@ void loop() {
         turn = 3;
       } else {
         player_2_remaining -= elapsed;
-        player_2_remaining += time_controls[limit_index].increment_ms;
+        player_2_remaining += time_controls[time_control_index].increment_ms;
         turn_start_time = millis();
         turn = 1;
       }
@@ -186,8 +186,8 @@ void loop() {
   if (turn == 0) {
     // Idle: flash between base time and increment
     // If increment is 0, just show the base time on both displays
-    unsigned long inc = time_controls[limit_index].increment_ms;
-    unsigned long base = time_controls[limit_index].base_ms;
+    unsigned long inc = time_controls[time_control_index].increment_ms;
+    unsigned long base = time_controls[time_control_index].base_ms;
 
     if (inc == 0) {
       displayTime(display_1, base, last_value_1);

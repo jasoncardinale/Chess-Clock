@@ -156,7 +156,7 @@ void loop() {
         player_1_remaining = 0;
         gameOver();
       } else {
-        player_1_remaining = player_1_remaining - elapsed + time_controls[time_control_index].increment_ms;
+        player_1_remaining += time_controls[time_control_index].increment_ms - elapsed;
         turn_start_time = millis();
         turn = 2;
       }
@@ -179,7 +179,7 @@ void loop() {
         player_2_remaining = 0;
         gameOver();
       } else {
-        player_2_remaining = player_2_remaining - elapsed + time_controls[time_control_index].increment_ms;
+        player_2_remaining += time_controls[time_control_index].increment_ms - elapsed;
         turn_start_time = millis();
         turn = 1;
       }
@@ -204,7 +204,7 @@ void loop() {
     }
   } else if (turn == 3) {
     // Game over: leave displays showing whatever they last showed
-    // The flagged player's display will read 0:00 / 00.00
+    // The flagged player's display will read 00:00
   } else {
     // Active turn
     unsigned long elapsed = millis() - turn_start_time;
@@ -217,14 +217,14 @@ void loop() {
       if (time_1 <= 0) {
         time_1 = 0;
         player_1_remaining = 0;
-        turn = 3;
+        gameOver();
       }
     } else if (turn == 2) {
       time_2 -= (long)elapsed;
       if (time_2 <= 0) {
         time_2 = 0;
         player_2_remaining = 0;
-        turn = 3;
+        gameOver();
       }
     }
 

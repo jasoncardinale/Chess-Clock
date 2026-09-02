@@ -50,8 +50,8 @@ const int TIME_CONTROLS_COUNT = sizeof(time_controls) / sizeof(time_controls[0])
 unsigned long turn_start_time = 0;
 unsigned long player_1_remaining = 0;
 unsigned long player_2_remaining = 0;
-unsigned long p1_press_start = 0;
-unsigned long p2_press_start = 0;
+unsigned long player_1_press_start = 0;
+unsigned long player_2_press_start = 0;
 
 // Turn states:
 //   0 = idle (game not started)
@@ -102,8 +102,8 @@ void resetClock() {
 void setup() {
   Serial.begin(9600);
 
-  pinMode(6, INPUT_PULLUP);
-  pinMode(7, INPUT_PULLUP);
+  pinMode(SWITCH_1_PIN, INPUT_PULLUP);
+  pinMode(SWITCH_2_PIN, INPUT_PULLUP);
 
   display_1.clear();
   display_2.clear();
@@ -122,15 +122,15 @@ void loop() {
 
   // Record when each button was pressed
   if (player_1.isPressed()) {
-    p1_press_start = millis();
+    player_1_press_start = millis();
   }
   if (player_2.isPressed()) {
-    p2_press_start = millis();
+    player_2_press_start = millis();
   }
 
   // Act on release, using the stored start time to decide short vs long
   if (player_1.isReleased()) {
-    unsigned long held = millis() - p1_press_start;
+    unsigned long held = millis() - player_1_press_start;
     if ((turn == 0 || turn == 3) && held >= LONG_PRESS_MS) {
       // Long press while idle or game over: cycle time control
       limit_index = (limit_index + 1) % TIME_CONTROLS_COUNT;
@@ -143,10 +143,10 @@ void loop() {
       // Short press while game over: reset to idle with same time control
       resetClock();
     } else if (turn == 1) {
-      // End P1's turn.
+      // End P1's turn
       unsigned long elapsed = millis() - turn_start_time;
       if (elapsed >= player_1_remaining) {
-        // P1 flagged on the press itself.
+        // P1 flagged on the press itself
         player_1_remaining = 0;
         turn = 3;
       } else {
@@ -159,7 +159,7 @@ void loop() {
   }
 
   if (player_2.isReleased()) {
-    unsigned long held = millis() - p2_press_start;
+    unsigned long held = millis() - player_2_press_start;
     if ((turn == 0 || turn == 3) && held >= LONG_PRESS_MS) {
       limit_index = (limit_index + 1) % TIME_CONTROLS_COUNT;
       resetClock();

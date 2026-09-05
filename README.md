@@ -8,7 +8,12 @@
 
 | Material | Count |
 |---|---|
-| CAD files are available in [Onshape](https://cad.onshape.com/documents/ef026658cd19dbbd06ef2f29/w/d300655bc5e5fb3e3e495900/e/ef8b9bfafebdc6279e713ce3?renderMode=0&uiState=6a94ef4f233901fb86f0c1bc)   | N/A  |
+| CAD files are available in [Onshape](https://cad.onshape.com/documents/ef026658cd19dbbd06ef2f29/w/d300655bc5e5fb3e3e495900/e/ef8b9bfafebdc6279e713ce3?renderMode=0&uiState=6a94ef4f233901fb86f0c1bc) | N/A |
+| Arduino (Uno) | 1 |
+| TM1637 4-Digit 7-Segment LED Display | 2 |
+| Endstop limit switch | 2 |
+| LED | 1 |
+| Pen spring | 4 |
 
 ## Assembly Instructions
 

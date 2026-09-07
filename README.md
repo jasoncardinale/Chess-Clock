@@ -38,8 +38,8 @@ Reference the BOM and the exploded assembly shown below.
 
 **Before**
 1. Power on Arduino via USB cable
-2. Long press (0.5s) to cycle time control for both players (display will alternate between time constraint and increment)
-3. When ready Player 2 (Black) will perform a short press Player 1's (White) button to start their time
+2. Long press (0.5s) a player's button to cycle time control for that player (display will alternate between time constraint and increment)
+3. When ready Player 2 (black) will perform a short press Player 1's (white) button to start their time
 
 **During**
 - Players exchange moves, firmly pressing down their button once the move is complete

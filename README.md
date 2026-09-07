@@ -1,5 +1,7 @@
 # Chess Timing Clock
 
+A ConductorAI themed 3D-printed Arduino-based chess clock with independent time controls, time increment support, dual 7-Segment displays, and mechanical paddle buttons.
+
 ![Assembly](images/assembly.png)
 
 ## Schematic
@@ -21,6 +23,8 @@
 | M3 Washer | 4 |
 
 ## Assembly Instructions
+
+*Printed in PLA on an Ender 3 V3 SE.*
 
 Reference the BOM and the exploded assembly shown below.
 

@@ -1,6 +1,6 @@
 # Chess Timing Clock
 
-A ConductorAI themed 3D-printed Arduino-based chess clock with independent time controls, time increment support, dual 7-Segment displays, and mechanical paddle buttons.
+A ConductorAI themed, Arduino-based chess clock with independent time controls, time increment support, dual 7-Segment displays, and mechanical paddle buttons.
 
 ![Assembly](images/assembly.png)
 

@@ -4,6 +4,8 @@
 
 ## Schematic
 
+![Schematic](images/schematic.png)
+
 ## Bill of Materials (BOM)
 
 | Material | Count |
@@ -19,7 +21,7 @@
 
 Reference the BOM and the exploded assembly shown below
 
-![Assembly](images/assembly_exploded.png)
+![Assembly Exploded](images/assembly_exploded.png)
 
 ## How to Use
 

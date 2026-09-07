@@ -19,7 +19,9 @@
 
 ## Assembly Instructions
 
-Reference the BOM and the exploded assembly shown below
+Reference the BOM and the exploded assembly shown below.
+
+**Note:** Button depression is dampened by standard pen springs. Cut 4 springs in half and place each half around an M2 guide bolt (between the button and housing).
 
 ![Assembly Exploded](images/assembly_exploded.png)
 

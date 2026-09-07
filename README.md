@@ -24,11 +24,11 @@
 
 Reference the BOM and the exploded assembly shown below.
 
+![Assembly Exploded](images/assembly_exploded.png)
+
 **Note:** Button depression is dampened by standard pen springs. Cut 4 springs in half and place each half around an M2 guide bolt (between the button and housing).
 
 **Note:** There are shallow, circular imprints underneath the clock housing. Place small amounts of hot glue in these areas to prevent the clock from sliding.
-
-![Assembly Exploded](images/assembly_exploded.png)
 
 ## How to Use
 

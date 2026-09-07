@@ -16,12 +16,17 @@
 | Endstop limit switch | 2 |
 | LED | 1 |
 | Pen spring | 4 |
+| M2x10 Bolt | 12 |
+| M3x10 Bolt | 8 |
+| M3 Washer | 4 |
 
 ## Assembly Instructions
 
 Reference the BOM and the exploded assembly shown below.
 
 **Note:** Button depression is dampened by standard pen springs. Cut 4 springs in half and place each half around an M2 guide bolt (between the button and housing).
+
+**Note:** There are shallow, circular imprints underneath the clock housing. Place small amounts of hot glue in these areas to prevent the clock from sliding.
 
 ![Assembly Exploded](images/assembly_exploded.png)
 
